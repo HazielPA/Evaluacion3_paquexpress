@@ -1,4 +1,5 @@
 # backend/database.py
+
 from sqlalchemy import create_engine, Column, Integer, String, Text, DECIMAL, TIMESTAMP, ForeignKey, Enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
@@ -8,8 +9,9 @@ import os
 # ===========================================
 # CONFIGURACIÓN DE BASE DE DATOS
 # ===========================================
-DATABASE_URL = "mysql+pymysql://root:root@localhost/paquexpress"
-# Cambia "root:root" si usas otro usuario/contraseña
+DATABASE_URL = "mysql+pymysql://root:root@localhost/paquexpress" 
+# ¡IMPORTANTE! Asegúrate de que esta URL apunte a tu base de datos 'paquexpress'
+# que contiene la tabla 'agentes' con la columna 'email' de HeidiSQL.
 
 engine = create_engine(DATABASE_URL, echo=False, future=True)
 
@@ -21,16 +23,17 @@ Base = declarative_base()
 # MODELOS DE TABLAS
 # ===========================================
 
+# backend/database.py
+
 class Agente(Base):
     __tablename__ = "agentes"
     
     id = Column(Integer, primary_key=True, index=True)
     nombre_completo = Column(String(100), nullable=False)
-    usuario = Column(String(50), unique=True, nullable=False, index=True)
+    # ✅ ESTA LÍNEA ES CORRECTA AHORA QUE CAMBIASTE LA DB
+    email = Column(String(50), unique=True, nullable=False, index=True) 
     password_hash = Column(String(255), nullable=False)
-    creado_en = Column(TIMESTAMP, default=datetime.utcnow)
-
-    paquetes = relationship("Paquete", back_populates="agente")
+    # ...
 
 
 class Paquete(Base):
